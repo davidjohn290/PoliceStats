@@ -5,6 +5,7 @@ const { getProperties, putDataIntoObject } = require("../utilis/getProperties");
 class DoughnutChart extends Component {
   state = {
     city: "cheshire",
+    chartCity: "Cheshire",
     policeDataKeys: [],
     policeDataValues: [],
   };
@@ -17,6 +18,16 @@ class DoughnutChart extends Component {
       this.setState({ policeDataKeys: keys, policeDataValues: values });
     });
   }
+
+  changeChart = (clickEvent) => {
+    clickEvent.preventDefault();
+    const city = clickEvent.target.value;
+    this.setState((currentState) => {
+      return { city };
+    });
+  };
+
+  handleChartSubmit = (submitEvent) => {};
 
   getPoliceChartData(city) {
     return fetch(`https://data.police.uk/api/stops-force?force=${city}`)
@@ -32,7 +43,7 @@ class DoughnutChart extends Component {
 
   handleConsoleLog = (clickEvent) => {
     clickEvent.preventDefault();
-    console.log(this.props);
+    console.log(this.state.city);
   };
 
   render() {
@@ -51,6 +62,18 @@ class DoughnutChart extends Component {
         <div className="chart">
           <p>Graph of reasons for stop and searches</p>
           <Doughnut data={data} />
+          <form>
+            <label>
+              Change what chart is showing:
+              <select onInput={this.changeChart}>
+                <option value=""></option>
+                <option value="cheshire">Cheshire</option>
+                <option value="merseyside">Merseyside</option>
+                <option value="lancashire">Lancashire</option>
+              </select>
+            </label>
+            <button>Submit</button>
+          </form>
         </div>
         <button onClick={this.handleConsoleLog}>Console Log</button>
       </div>
